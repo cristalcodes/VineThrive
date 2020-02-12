@@ -1,4 +1,4 @@
 class PlantSerializer < ActiveModel::Serializer
   attributes :id, :description, :light, :water, :price
-  belongs_to :stages 
+  # belongs_to :stages 
 end
