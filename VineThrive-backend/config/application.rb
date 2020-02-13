@@ -21,6 +21,14 @@ Bundler.require(*Rails.groups)
 
 module VineThriveBackend
   class Application < Rails::Application
+
+    config.middlewear.insert_before 0, Rack::Cors do 
+      allow do 
+        origins '*'
+        resource '*', headers: :any, methods[:get, :post]
+      end 
+    end 
+    
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
