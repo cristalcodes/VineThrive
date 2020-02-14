@@ -113,3 +113,14 @@ function displayPlant(e){
     })
 }
 
+function removePlant(id){
+    clearForm()
+    fetch(BASE_URL + `/plants/${id}`, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    .then(event.target.parentElement.remove())
+}
