@@ -15,7 +15,8 @@ function getPlants(){
         main.innerHTML+= plants.map(plant =>  `
         <li><a href="#" data-id="${plant.id}">${plant.description}</a> 
         - ${plant.price} - ${plant.light} - ${plant.water}
-
+        <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
+        <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
         </li>
         `).join('')
 
