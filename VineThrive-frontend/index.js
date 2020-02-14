@@ -97,3 +97,19 @@ function createPlant() {
     })
 }
 
+function displayPlant(e){
+    e.preventDefault()
+    clearForm()
+    let id = this.dataset.id
+    let main = document.querySelector('#main')
+    main.innerHTML = ""
+    fetch(BASE_URL + `/plants/${id}`)
+    .then(resp => resp.json())
+    .then(plant => {
+        main.innerHTML += `
+        <h3>${plant.description}</h3> <hr>
+        <p>${plant.price} - ${plant.light} - ${plant.water}</p>
+        `
+    })
+}
+
