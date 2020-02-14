@@ -67,3 +67,12 @@ function displayCreateForm() {
     plantFormDiv.innerHTML = html
 }
 
+function createPlant() {
+    const plant = {
+        "name": document.getElementById('name').value,
+        "description": document.getElementById('description').value,
+        "price": document.getElementById('price').value,
+        "light": document.getElementById('light').value,
+        "water": document.getElementById('water').value 
+    }
+}
