@@ -75,4 +75,14 @@ function createPlant() {
         "light": document.getElementById('light').value,
         "water": document.getElementById('water').value 
     }
+    fetch(BASE_URL+'/plants',{
+        method: "POST",
+        body: JSON.stringify(plant),
+        headers: {
+            'Content-Type': 'application/json' ,
+            'Accept': 'application/json'
+        }
+    })
+   
 }
+
