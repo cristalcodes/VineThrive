@@ -15,9 +15,15 @@ function getPlants(){
         main.innerHTML+= plants.map(plant =>  `
         <li><a href="#" data-id="${plant.id}">${plant.description}</a> 
         - ${plant.price} - ${plant.light} - ${plant.water}
+
         </li>
         `).join('')
 
         attachClickToPlantLinks()
     })
+}
+
+function clearForm(){
+    let plantFormDiv = document.getElementById("plant-form")
+    plantFormDiv.innerHTML = ''
 }
