@@ -83,6 +83,15 @@ function createPlant() {
             'Accept': 'application/json'
         }
     })
-   
+    .then(resp => resp.json())
+    .then(plant => {
+        document.querySelector('#main').innerHTML += `
+        <li><a href="#" data-id="${plant.id}">${plant.description}</a>
+        - ${plant.price} - ${plant.light} - ${plant.water}
+         </li>
+        `
+        attachClickToPlantLinks()
+        clearForm()
+    })
 }
 
