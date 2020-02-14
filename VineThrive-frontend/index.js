@@ -42,3 +42,28 @@ function attachClickToPlantLinks(){
     })
 }
 
+function displayCreateForm() {
+    let plantFormDiv = document.getElementById("plant-form")
+    let html = `
+        <form onsubmit="createPlant();return false;"></form>
+        <label>Name:</label>
+        <input type="text" id="name"><br>
+
+        <label>Description:</label>
+        <textarea type="text" id="description"></textarea><br>
+
+        <label>Price:</label>
+        <input type="text" id="price"><br>
+
+        <label>Light:</label>
+        <input type="text" id="light"><br>
+
+        <label>Water</label>
+        <input type="text" id="water"><br>
+
+        <input type="submit" value="Create Plant"><br>
+
+    `
+    plantFormDiv.innerHTML = html
+}
+
