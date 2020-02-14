@@ -27,3 +27,18 @@ function clearForm(){
     let plantFormDiv = document.getElementById("plant-form")
     plantFormDiv.innerHTML = ''
 }
+
+// function fetchPlants() {
+//     fetch(BASE_URL+'/plants')
+//     .then(resp => resp.json())
+//     .then(plants => renderPlants(plants));
+// }
+
+
+function attachClickToPlantLinks(){
+    let plants = document.querySelectorAll("li a")
+    plants.forEach(plant =>{
+        plant.addEventListener('click', displayPlant);
+    })
+}
+
