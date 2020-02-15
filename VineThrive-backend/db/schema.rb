@@ -10,13 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_11_051833) do
-
-  create_table "categories", force: :cascade do |t|
-    t.string "title"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
+ActiveRecord::Schema.define(version: 2020_02_15_195413) do
 
   create_table "plants", force: :cascade do |t|
     t.string "name"
@@ -25,6 +19,15 @@ ActiveRecord::Schema.define(version: 2020_02_11_051833) do
     t.string "light"
     t.string "water"
     t.integer "category_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "stages", force: :cascade do |t|
+    t.string "name"
+    t.string "seed"
+    t.string "small"
+    t.string "large"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
