@@ -6,6 +6,7 @@ class CreateStages < ActiveRecord::Migration[6.0]
       t.string :small
       t.string :large
 
+      t.integer :plant_id
       t.timestamps
     end
   end

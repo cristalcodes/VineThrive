@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 2020_02_15_195413) do
     t.string "seed"
     t.string "small"
     t.string "large"
+    t.integer "plant_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
