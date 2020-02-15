@@ -12,7 +12,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create stage" do
     assert_difference('Stage.count') do
-      post stages_url, params: { stage: {  } }, as: :json
+      post stages_url, params: { stage: { large: @stage.large, name: @stage.name, seed: @stage.seed, small: @stage.small } }, as: :json
     end
 
     assert_response 201
@@ -24,7 +24,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update stage" do
-    patch stage_url(@stage), params: { stage: {  } }, as: :json
+    patch stage_url(@stage), params: { stage: { large: @stage.large, name: @stage.name, seed: @stage.seed, small: @stage.small } }, as: :json
     assert_response 200
   end
 
