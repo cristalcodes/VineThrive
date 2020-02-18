@@ -1,8 +1,51 @@
-window.addEventListener('load', (event) => {
-    console.log('page is fully loaded');
-});
-
 const BASE_URL = 'http://localhost:3000'
+const PLANT_URL = `${BASE_URL}/plants`
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    getPlants();
+  })
+  
+  class Plant {
+    constructor(plant) {
+        this.name = plant.name 
+        this.description = plant.description    
+        this.price = plant.price
+        this.light = plant.light
+        this.water = plant.water
+    }
+
+    renderPlant() {
+        let main = document.querySelector('#main ul');
+        let li = document.createElement('li');
+        let a = document.createElement('a');
+        a.setAttribute("href", "plant_button")
+        a.setAttribute("data-id", this.id)
+        a.innerText = this.name
+        // let t = document.createTextNode(this.name)
+        // a.appendChild(t)
+
+        let p = document.createElement("p");
+        p.innerHTML = `${this.description} - ${this.price} - ${this.light} - ${this.water}`
+        
+        let removeButton = document.createElement("button");
+        let editButton = document.createElement("button");
+
+        removeButton.addEventListener('click', (e) => {
+            removeButton(this.id)
+          });
+      
+        editButton.addEventListener('click', (e) => {
+          editButton(this.id)
+        });
+    
+        li.appendChild(a);
+        li.appendChild(p);
+        li.appendChild(removeButton);
+        li.appendChild(editButton);
+        main.appendChild(li) 
+
+    }
+  }
 
 function getPlants(){
     clearForm();
@@ -13,13 +56,12 @@ function getPlants(){
     .then(resp => resp.json())
     .then(plants => {
         console.log(plants);
-        main.innerHTML+= plants.map(plant =>  `
-        <li><a href="#" data-id="${plant.id}">${plant.name}</a>
-        ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
-        <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
-        <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
-        </li>
-        `).join('')
+
+        var i;
+        for(i=0; i <plants.length; i++){
+           let currentPlant = new Plant(plants[i]);
+           currentPlant.renderPlant();
+        }
 
         attachClickToPlantLinks()
     })
@@ -90,7 +132,7 @@ function createPlant() {
     .then(resp => resp.json())
     .then(plant => {
         document.querySelector('#main').innerHTML += `
-        <li><a href="#" data-id="${plant.id}">${plant.name}</a>
+        <li><a href="plant_button" data-id="${plant.id}">${plant.name}</a>
         ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
          <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
          <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
@@ -107,11 +149,12 @@ function displayPlant(e){
     let id = this.dataset.id
     let main = document.querySelector('#main')
     main.innerHTML = ""
-    fetch(BASE_URL + `/plants/${id}`)
+    fetch(BASE_URL + `/plants/${this.id}`)
     .then(resp => resp.json())
     .then(plant => {
         main.innerHTML += `
-        <h3>${plant.description}</h3> <hr>
+        <h3>${plant.name}</h3> <hr>
+        <p>${plant.description}</p> <hr>
         <p>${plant.price} - ${plant.light} - ${plant.water}</p>
         `
     })
