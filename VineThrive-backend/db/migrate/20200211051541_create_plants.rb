@@ -6,7 +6,6 @@ class CreatePlants < ActiveRecord::Migration[6.0]
       t.integer :price
       t.string :light
       t.string :water
-      t.integer :category_id
 
       t.timestamps
     end
