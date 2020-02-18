@@ -18,13 +18,11 @@ ActiveRecord::Schema.define(version: 2020_02_15_195413) do
     t.integer "price"
     t.string "light"
     t.string "water"
-    t.integer "category_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "stages", force: :cascade do |t|
-    t.string "name"
     t.string "seed"
     t.string "small"
     t.string "large"
