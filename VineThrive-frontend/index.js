@@ -22,7 +22,7 @@ const PLANT_URL = `${BASE_URL}/plants`
     }
 
     renderPlant() {
-        let main = document.querySelector('#main ul');
+        let main = document.querySelector('#main');
         let li = document.createElement('li');
         let a = document.createElement('a');
         a.setAttribute("href", "all_plants")
@@ -35,22 +35,23 @@ const PLANT_URL = `${BASE_URL}/plants`
         p.innerHTML = `${this.description} - ${this.price} - ${this.light} - ${this.water}`
         
         let removeButton = document.createElement("button");
+        removeButton.innerHTML = "Delete"
         let editButton = document.createElement("button");
-
-        removeButton.addEventListener('click', (e) => {
-            removeButton(this.id)
-          });
-      
-        editButton.addEventListener('click', (e) => {
-          editButton(this.id)
-        });
+        editButton.innerHTML = "Edit"
     
         li.appendChild(a);
         li.appendChild(p);
         li.appendChild(removeButton);
         li.appendChild(editButton);
-        main.appendChild(li) 
+        main.appendChild(li);
 
+        removeButton.addEventListener('click', (e) => {
+            removePlant(this.id)
+          });
+      
+        editButton.addEventListener('click', (e) => {
+          editPlant(this.id)
+        });
     }
 }
     function getPlants(){
@@ -60,7 +61,7 @@ const PLANT_URL = `${BASE_URL}/plants`
         .then(resp => resp.json())
         .then((data) => {
         
-            let main = document.querySelector('#main ul')
+            let main = document.querySelector('#main')
             main.innerHTML ='';
             data.forEach(plant => {
                 let newPlant= new Plant(plant);
@@ -78,10 +79,17 @@ const PLANT_URL = `${BASE_URL}/plants`
         })
     }
 
+    // function mainPlant() {
+    //     let plants = document.querySelectorAll('main')
+    //     plants.forEach(plant =>{
+    //         plant.addEventListener('click', displayPlant)
+    //     })
+    // }
+
     function displayCreateForm() {
         let plantFormDiv = document.getElementById("plant-form")
         let html = `
-            <form onsubmit="createPlant();return false;"></form>
+            <form>
             <label>Name:</label>
             <input type="text" id="name"><br>
 
@@ -98,20 +106,23 @@ const PLANT_URL = `${BASE_URL}/plants`
             <input type="text" id="water"><br>
 
             <input type="submit" value="Create Plant"><br>
-
+            </form>
         `
+        
         document.getElementById("plant-form").innerHTML = html
+        document.querySelector("form").addEventListener('submit', createPlant)
     }
 
     //add new  plant to database
 
     function createPlant() {
+        event.preventDefault()
         let inputPlant = {
-            "name": document.getElementById('name').value,
-            "description": document.getElementById('description').value,
-            "price": document.getElementById('price').value,
-            "light": document.getElementById('light').value,
-            "water": document.getElementById('water').value 
+            "name": event.target.name.value,
+            "description": event.target.description.value,
+            "price": event.target.price.value,
+            "light": event.target.light.value,
+            "water": event.target.water.value 
         }
         fetch(PLANT_URL,{
             method: "POST",
@@ -124,16 +135,16 @@ const PLANT_URL = `${BASE_URL}/plants`
         .then(resp => resp.json())
         .then(plant => {
             let newPlant = new Plant(plant);
-        newPlant.renderPlant();
+            newPlant.renderPlant();
         
-            document.querySelector('#main').innerHTML += `
-            <li><a href="all_plants" data-id="${plant.id}">${plant.name}</a>
-            ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
-            <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
-            <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
-            </li>
-            `
-            attachClickToPlantLinks()
+            // document.querySelector('#main').innerHTML += `
+            // <li><a href="all_plants" data-id="${plant.id}">${plant.name}</a>
+            // ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
+            // <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
+            // <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
+            // </li>
+            // `
+            // attachClickToPlantLinks()
             clearForm()
         })
     }
@@ -144,20 +155,33 @@ const PLANT_URL = `${BASE_URL}/plants`
         let plant_id = event.target.dataset.id
         let main = document.querySelector('#main')
         main.innerHTML = ""
+
+        let addButton = document.createElement("button")
+        addButton.classList.add('allPlants')
+        addButton.innerHTML = "All Plants"
+        let navDiv = document.querySelector('#sideNav')
+        navDiv.append(addButton)
+        addButton.addEventListener('click', getPlants)
+        
+        // addButton.addEventListener("click", (event) => mainPlant(event), false)
+
+
         fetch(BASE_URL+`/plants/` + plant_id)
         .then(resp => resp.json())
         .then(plant =>  {
             main.innerHTML += `
-            <h3>${plant.name}</h3> <hr>
-            <p>${plant.description}</p> <hr>
-            <p>${plant.price} - ${plant.light} - ${plant.water}</p>
+            <h3>${plant.name}</h3><hr>
+            <p><strong>Description: </strong>${plant.description}</p> 
+            <p><strong>Price: </strong> ${plant.price}</p>
+            <p><strong>Light: </strong>${plant.light}</p>
+            <p><strong>Water: </strong> ${plant.water}</p>
             `
         })
     }
 
     function removePlant(id){
         clearForm()
-        fetch(BASE_URL + `/plants/${id}`, {
+        fetch(PLANT_URL + `${id}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json' ,
@@ -197,9 +221,8 @@ const PLANT_URL = `${BASE_URL}/plants`
         plantForm.innerHTML = html
         })
     }
-
-    function updatePlant(id){
-        const plant = {
+    function updatePlant(id) { 
+    const plant = {
             "name": document.getElementById('name').value,
             "description": document.getElementById('description').value,
             "price": document.getElementById('price').value,
@@ -215,19 +238,16 @@ const PLANT_URL = `${BASE_URL}/plants`
             body: JSON.stringify(plant)
         })
         .then(resp => resp.json())
-        .then((plant)=> {
-                document.querySelectorAll(`li a[data-id="${id}"]`)[0].parentElement.innerHTML =  `
-                <li><a href="#" data-id="${plant.id}">${plant.name}</a>
-                ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
-                <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
-                <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
-                </li>
-                `
-                attachClickPlantLinks()
-                clearForm()
-            }
-        
-        )
+        .then(data => {
+            let plant = data 
+            document.querySelectorAll(`li a[data-id="${id}"]`)[0].parentElement.innerHTML =  `
+                    <li><a href="#" data-id="${plant.id}">${plant.name}</a>
+                     ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
+                    <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
+                    <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
+                    </li>
+                   `
+                    attachClickToPlantLinks()
+                    clearForm()
+        })
     }
-
-  
