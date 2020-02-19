@@ -11,7 +11,7 @@ const PLANT_URL = `${BASE_URL}/plants`
         plantFormDiv.innerHTML = ''
     }
   
-  class Plant {
+class Plant {
     constructor(plant) {
         this.id = plant.id
         this.name = plant.name 
@@ -32,7 +32,6 @@ const PLANT_URL = `${BASE_URL}/plants`
         // a.appendChild(t)
 
         let p = document.createElement("p");
-        p.innerHTML = `${this.description} - ${this.price} - ${this.light} - ${this.water}`
         
         let removeButton = document.createElement("button");
         removeButton.innerHTML = "Delete"
@@ -79,15 +78,8 @@ const PLANT_URL = `${BASE_URL}/plants`
         })
     }
 
-    // function mainPlant() {
-    //     let plants = document.querySelectorAll('main')
-    //     plants.forEach(plant =>{
-    //         plant.addEventListener('click', displayPlant)
-    //     })
-    // }
-
     function displayCreateForm() {
-        let plantFormDiv = document.getElementById("plant-form")
+       //let plantFormDiv = document.getElementById("plant-form")
         let html = `
             <form>
             <label>Name:</label>
@@ -136,15 +128,6 @@ const PLANT_URL = `${BASE_URL}/plants`
         .then(plant => {
             let newPlant = new Plant(plant);
             newPlant.renderPlant();
-        
-            // document.querySelector('#main').innerHTML += `
-            // <li><a href="all_plants" data-id="${plant.id}">${plant.name}</a>
-            // ${plant.description} - ${plant.price} - ${plant.light} - ${plant.water}
-            // <button data-id=${plant.id} onclick="removePlant(${plant.id})"; return false;>Delete</button>
-            // <button data-id=${plant.id} onclick="editPlant(${plant.id})"; return false;>Edit</button>
-            // </li>
-            // `
-            // attachClickToPlantLinks()
             clearForm()
         })
     }
@@ -162,9 +145,8 @@ const PLANT_URL = `${BASE_URL}/plants`
         let navDiv = document.querySelector('#sideNav')
         navDiv.append(addButton)
         addButton.addEventListener('click', getPlants)
-        
-        // addButton.addEventListener("click", (event) => mainPlant(event), false)
 
+    // addButton.addEventListener("click", (event) => mainPlant(event), false)
 
         fetch(BASE_URL+`/plants/` + plant_id)
         .then(resp => resp.json())
