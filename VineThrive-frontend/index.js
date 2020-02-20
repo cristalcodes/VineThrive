@@ -1,11 +1,15 @@
 const BASE_URL = 'http://localhost:3000'
 const PLANT_URL = `${BASE_URL}/plants`
+const STAGES_URL = 'http://localhost:3000/stages'
 
 
     document.addEventListener("DOMContentLoaded", ()=>{
-        getPlants();
+        console.log('Dom content')
+       getPlants();
     })
-
+   
+    
+    
     function clearForm(){
         let plantFormDiv = document.getElementById("plant-form")
         plantFormDiv.innerHTML = ''
@@ -54,7 +58,8 @@ class Plant {
     }
 }
     function getPlants(){
-        clearForm();
+        console.error('originated')
+      //  clearForm();
         
         fetch(PLANT_URL)
         .then(resp => resp.json())
@@ -157,13 +162,36 @@ class Plant {
             <p><strong>Price: </strong> ${plant.price}</p>
             <p><strong>Light: </strong>${plant.light}</p>
             <p><strong>Water: </strong> ${plant.water}</p>
-            `
+
+         `
+         plant.stages = {
+            id: '${plant.id}',
+            seed: 'Seed',
+            small: 'Small',
+            large: 'Large',
+            plant_id: 'plantId'
+        }
+        //  if(plant.stages && plant.stages.length){
+        //  const stageElements = plant.stages.map(stage =>{
+        //     const stageModel = new Stage(stage);
+        //     return stageModel.renderStage();
+        //  })
+        //  main.innerHTML = main.innerHTML + stageElements.join('');
+            
+        // }
+
+         if(plant.stages && plant.stages){
+         const stageElements = new Stage(plant.stages)
+         main.innerHTML = main.innerHTML + stageElements.renderStage();
+            
+        }
         })
+    
     }
 
     function removePlant(id){
         clearForm()
-        fetch(PLANT_URL + `${id}`, {
+        fetch(PLANT_URL + `/${id}`, {
             method: "DELETE",
             headers: {
                 'Content-Type': 'application/json' ,
@@ -232,4 +260,33 @@ class Plant {
                     attachClickToPlantLinks()
                     clearForm()
         })
+    }
+
+    class Stage {
+        constructor(stageObj) {
+            this.id = stageObj.id
+            this.seed = stageObj.seed
+            this.small = stageObj.small 
+            this.large = stageObj.large
+            this.plantId = stageObj.plant_id
+        }
+
+        renderStage() {
+            // let stagesContainer = document.querySelector('.stage-container')
+            // stagesContainer.innerHTML += 
+           return  `
+            <div class="stage-plant" data-id="${this.id}">
+                <div class="stage-container"> 
+
+                <p>${this.seed}   <input type="checkbox" id="seed" value="seed" name="seed_value" />
+                <textarea id="textarea" ></textarea></p>
+                <p>${this.small}    <input type="checkbox" id="seed" value="small" name="small_value" />
+                <textarea id="textarea" ></textarea></p>
+                <p>${this.large}    <input type="checkbox" id="seed" value="large" name="large_value" />
+                <textarea id="textarea" ></textarea></p>
+
+                </div>
+            </div>
+            `
+        }
     }
