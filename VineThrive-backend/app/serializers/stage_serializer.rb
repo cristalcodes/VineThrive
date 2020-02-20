@@ -1,4 +1,4 @@
 class StageSerializer < ActiveModel::Serializer
   attributes :id, :seed, :small, :large
-  belongs_to :plants
+  belongs_to :plant
 end
