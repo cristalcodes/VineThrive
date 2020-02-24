@@ -46,6 +46,6 @@ class StagesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def stage_params
-      params.require(:stage).permit(:name, :seed, :small, :large)
+      params.require(:stage).permit(:name, :seed, :small, :large, :plant_id, :created_at, plant_attribues: [:id, :name, :description, :price, :light, :water])
     end
 end
