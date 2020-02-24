@@ -3,9 +3,9 @@ class PlantsController < ApplicationController
 
   # GET /plants
   def index
-    @plants = Plant.all
+    plants = Plant.all
 
-    render json: @plants
+    render json: plants
   end
 
   # GET /plants/1
@@ -15,27 +15,27 @@ class PlantsController < ApplicationController
 
   # POST /plants
   def create
-    @plant = Plant.new(plant_params)
+    plant = Plant.new(plant_params)
 
-    if @plant.save
-      render json: @plant, status: :created, location: @plant
+    if plant.save
+      render json: plant, status: :created, location: @plant
     else
-      render json: @plant.errors, status: :unprocessable_entity
+      render json: plant.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /plants/1
   def update
-    if @plant.update(plant_params)
-      render json: @plant
+    if plant.update(plant_params)
+      render json: plant
     else
-      render json: @plant.errors, status: :unprocessable_entity
+      render json: plant.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /plants/1
   def destroy
-    @plant.destroy
+    plant.destroy
   end
 
   private
@@ -46,6 +46,6 @@ class PlantsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def plant_params
-      params.require(:plant).permit(:name, :description, :price, :light, :water, :stages_attributes: [:seed, :small, :large])
+      params.require(:plant).permit(:name, :description, :price, :light, :water)
     end
 end

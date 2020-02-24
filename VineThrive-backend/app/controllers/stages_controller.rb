@@ -3,49 +3,49 @@ class StagesController < ApplicationController
 
   # GET /stages
   def index
-    @stages = Stage.all
+    stages = Stage.all
 
-    render json: @stages
+    render json: stages
   end
 
   # GET /stages/1
   def show
-    render json: @stage
+    render json: stage
   end
 
   # POST /stages
   def create
-    @stage = Stage.new(stage_params)
+    stage = Stage.new(stage_params)
 
-    if @stage.save
-      render json: @stage, status: :created, location: @stage
+    if stage.save
+      render json: stage, status: :created, location: stage
     else
-      render json: @stage.errors, status: :unprocessable_entity
+      render json: stage.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /stages/1
   def update
-    if @stage.update(stage_params)
-      render json: @stage
+    if stage.update(stage_params)
+      render json: stage
     else
-      render json: @stage.errors, status: :unprocessable_entity
+      render json: stage.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /stages/1
   def destroy
-    @stage.destroy
+    stage.destroy
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_stage
-      @stage = Stage.find(params[:id])
+      stage = Stage.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
     def stage_params
-      params.require(:stage).permit(:name, :seed, :small, :large, :plant_id, :created_at, plant_attribues: [:id, :name, :description, :price, :light, :water])
+      params.require(:stage).permit(:name, :reached, :notes, :plant_id)
     end
 end
