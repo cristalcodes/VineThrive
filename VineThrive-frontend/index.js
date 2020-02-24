@@ -1,10 +1,9 @@
 const BASE_URL = 'http://localhost:3000'
 const PLANT_URL = `${BASE_URL}/plants`
-const STAGES_URL = 'http://localhost:3000/stages'
+const STAGES_URL = `${BASE_URL}/stages`
 
 
     document.addEventListener("DOMContentLoaded", ()=>{
-        console.log('Dom content')
        getPlants();
     })
    
@@ -24,6 +23,7 @@ class Plant {
         this.light = plant.light
         this.water = plant.water
     }
+
 
     renderPlant() {
         let main = document.querySelector('#main');
@@ -58,7 +58,7 @@ class Plant {
     }
 }
     function getPlants(){
-        console.error('originated')
+       
       //  clearForm();
         
         fetch(PLANT_URL)
@@ -75,6 +75,7 @@ class Plant {
             attachClickToPlantLinks()
         })
     }
+
 
     function attachClickToPlantLinks(){
         let plants = document.querySelectorAll("li a")
@@ -151,8 +152,6 @@ class Plant {
         navDiv.append(addButton)
         addButton.addEventListener('click', getPlants)
 
-    // addButton.addEventListener("click", (event) => mainPlant(event), false)
-
         fetch(BASE_URL+`/plants/` + plant_id)
         .then(resp => resp.json())
         .then(plant =>  {
@@ -162,31 +161,12 @@ class Plant {
             <p><strong>Price: </strong> ${plant.price}</p>
             <p><strong>Light: </strong>${plant.light}</p>
             <p><strong>Water: </strong> ${plant.water}</p>
-
          `
-         plant.stages = {
-            id: '${plant.id}',
-            seed: 'Seed',
-            small: 'Small',
-            large: 'Large',
-            plant_id: 'plantId'
-        }
-        //  if(plant.stages && plant.stages.length){
-        //  const stageElements = plant.stages.map(stage =>{
-        //     const stageModel = new Stage(stage);
-        //     return stageModel.renderStage();
-        //  })
-        //  main.innerHTML = main.innerHTML + stageElements.join('');
-            
-        // }
-
-         if(plant.stages && plant.stages){
-         const stageElements = new Stage(plant.stages)
-         main.innerHTML = main.innerHTML + stageElements.renderStage();
-            
-        }
+            let stages = new Stage(plant.stages)
+            stages.renderStages();
         })
-    
+        
+        main.append()
     }
 
     function removePlant(id){
@@ -231,6 +211,7 @@ class Plant {
         plantForm.innerHTML = html
         })
     }
+    
     function updatePlant(id) { 
     const plant = {
             "name": document.getElementById('name').value,
@@ -262,31 +243,121 @@ class Plant {
         })
     }
 
+    function getStage() {
+        fetch(STAGES_URL)
+        .then(resp => resp.json())
+        .then(data => {
+        
+            let main = document.querySelector('#main')
+            main.innerHTML ='';
+            data.forEach(stage => {
+                let newStage= new Stage(stage);
+                newStage.renderStage();
+                });
+
+            clearStageForm();
+        })  
+    }
     class Stage {
-        constructor(stageObj) {
-            this.id = stageObj.id
-            this.seed = stageObj.seed
-            this.small = stageObj.small 
-            this.large = stageObj.large
-            this.plantId = stageObj.plant_id
+        constructor(stages) {
+            this.id = stages.id
+            this.name = stages.name
+            this.reached = stages.reached
+            this.notes = stages.notes
+            this.plant_id = stages.plant_id
         }
 
-        renderStage() {
-            // let stagesContainer = document.querySelector('.stage-container')
-            // stagesContainer.innerHTML += 
-           return  `
-            <div class="stage-plant" data-id="${this.id}">
-                <div class="stage-container"> 
+        renderStages() {
+            //console.log(this.seed)
+            let stageDiv = document.createElement('div');
+            stageDiv.classList.add("stages-container");
+            //stageDiv.appendChild('#main')
+            if(typeof this.name !== 'undefined'){
+                let p1 = document.createElement('p');
+                let p1txt = document.createTextNode(this.name);
+           
+                p1.appendChild(p1txt);
+                stageDiv.appendChild(p1);
+            }
 
-                <p>${this.seed}   <input type="checkbox" id="seed" value="seed" name="seed_value" />
-                <textarea id="textarea" ></textarea></p>
-                <p>${this.small}    <input type="checkbox" id="seed" value="small" name="small_value" />
-                <textarea id="textarea" ></textarea></p>
-                <p>${this.large}    <input type="checkbox" id="seed" value="large" name="large_value" />
-                <textarea id="textarea" ></textarea></p>
+            if(typeof this.reached!== 'undefined'){
+                let p2 = document.createElement('p');
+                let p2txt = document.createTextNode(this.name);
+                p2.appendChild(p2txt);
+                stageDiv.appendChild(p2);
+            }
 
-                </div>
-            </div>
-            `
+            if(typeof this.notes!== 'undefined'){
+                let p3 = document.createElement('p');
+                let p3txt = document.createTextNode(this.notes);
+                p3.appendChild(p3txt);
+                stageDiv.appendChild(p3);
+            }
+
+            let stageButton = document.createElement("button");
+            let stageButtonTxt = document.createTextNode('Add Stage');
+            stageButton.appendChild(stageButtonTxt);
+
+            stageButton.addEventListener('click', (e) => {
+                displayStageForm(e, this.plant_id);
+            });
+            document.getElementById("main").appendChild(stageButton);
+            document.getElementById("main").appendChild(stageDiv);
         }
+    }
+
+    function displayStageForm(event, plant_id){
+        event.preventDefault();
+        let stageFormDiv = document.createElement("div");
+        stageFormDiv.id = "stage-form";
+        document.getElementById('main').appendChild(stageFormDiv);
+
+        let html = `
+        <form onsubmit="updateStage(); return false;">
+        <input id="plant_id" name="plant_id" type="hidden" value="${plant_id}">
+            <p>Seed Stage <input type="checkbox" id="seed" value="seed" name="seed_value"/>
+            <p>Small Stage <input type="checkbox" id="seed" value="small" name="small_value"/>
+            <p>Large Stage <input type="checkbox" id="seed" value="large" name="large_value"/>
+            <br>
+            <br>
+            <label> Notes: </label>
+            <textarea id="textarea" name="notes" ></textarea></p>
+        <input type="submit" value="Update Stage">
+        </form>
+        `
+        stageFormDiv.innerHTML = html
+    
+        stageFormDiv.addEventListener('submit', updateStage);
+
+    }
+
+    function updateStage() {
+        //event.preventDefault()
+        let inputStage = {
+            "plant_id": event.target.plant_id.value,
+            "name": event.target.seed_value.value,
+            "reached": event.target.small_value.value,
+            "notes": event.target.notes.value
+        }
+        fetch(STAGES_URL,{
+            method: "PATCH",
+            body: JSON.stringify(inputStage),
+            headers: {
+                'Content-Type': 'application/json' ,
+                'Accept': 'application/json'
+            }
+        })
+        .then(resp => {
+            console.log(resp);
+        })
+        .then(stage => {
+            let newStage = new Stage(stage);
+            newStage.renderStages();
+            clearStageForm()
+        })
+    }
+
+    function clearStageForm(){
+        let stageFormDiv = document.getElementById("stage-form")
+        stageFormDiv.innerHTML = ''
     }
